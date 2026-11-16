@@ -1,5 +1,6 @@
-import { initializeApp, getApps } from 'firebase/app';
+import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
 import {
+  Auth,
   getAuth,
   GoogleAuthProvider,
   onAuthStateChanged,
@@ -8,22 +9,64 @@ import {
 } from 'firebase/auth';
 import firebaseConfig from '../../firebase-applet-config.json';
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-const auth = getAuth(app);
-
 export const DRIVE_SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
-
-const provider = new GoogleAuthProvider();
-DRIVE_SCOPES.forEach((scope) => provider.addScope(scope));
 
 let isSigningIn = false;
 // In-memory access token cache (never stored in localStorage/sessionStorage)
 let cachedAccessToken: string | null = null;
+let cachedAuth: Auth | null = null;
+
+function getResolvedFirebaseConfig() {
+  const apiKey =
+    (import.meta.env.VITE_FIREBASE_API_KEY as string | undefined)?.trim() ||
+    firebaseConfig.apiKey?.trim() ||
+    '';
+
+  return {
+    ...firebaseConfig,
+    apiKey,
+  };
+}
+
+export function isDriveAuthConfigured(): boolean {
+  const cfg = getResolvedFirebaseConfig();
+  return Boolean(cfg.apiKey && cfg.projectId && cfg.appId);
+}
+
+function getFirebaseAuth(): Auth | null {
+  if (cachedAuth) return cachedAuth;
+  const cfg = getResolvedFirebaseConfig();
+  if (!cfg.apiKey || !cfg.projectId || !cfg.appId) {
+    return null;
+  }
+
+  try {
+    const app: FirebaseApp =
+      getApps().length === 0 ? initializeApp(cfg) : getApps()[0];
+    cachedAuth = getAuth(app);
+    return cachedAuth;
+  } catch (err) {
+    console.warn('Firebase Auth initialization skipped:', err);
+    return null;
+  }
+}
+
+function buildGoogleProvider(): GoogleAuthProvider {
+  const provider = new GoogleAuthProvider();
+  DRIVE_SCOPES.forEach((scope) => provider.addScope(scope));
+  return provider;
+}
 
 export const initDriveAuth = (
   onAuthSuccess?: (user: User, token: string) => void,
   onAuthSignedOut?: () => void
 ) => {
+  const auth = getFirebaseAuth();
+  if (!auth) {
+    onAuthSignedOut?.();
+    return () => {};
+  }
+
   return onAuthStateChanged(auth, (user: User | null) => {
     if (user && cachedAccessToken) {
       onAuthSuccess?.(user, cachedAccessToken);
@@ -40,9 +83,16 @@ export const signInWithGoogleDrive = async (): Promise<{
   user: User;
   accessToken: string;
 }> => {
+  const auth = getFirebaseAuth();
+  if (!auth) {
+    throw new Error(
+      'Google Drive sign-in requires a Firebase apiKey in firebase-applet-config.json (or VITE_FIREBASE_API_KEY).'
+    );
+  }
+
   try {
     isSigningIn = true;
-    const result = await signInWithPopup(auth, provider);
+    const result = await signInWithPopup(auth, buildGoogleProvider());
     const credential = GoogleAuthProvider.credentialFromResult(result);
     if (!credential?.accessToken) {
       throw new Error('Google Drive access token was not returned.');
@@ -60,7 +110,10 @@ export const getDriveAccessToken = (): string | null => {
 
 export const signOutGoogleDrive = async (): Promise<void> => {
   cachedAccessToken = null;
-  await auth.signOut();
+  const auth = getFirebaseAuth();
+  if (auth) {
+    await auth.signOut();
+  }
 };
 
 export interface DriveFolderSummary {
