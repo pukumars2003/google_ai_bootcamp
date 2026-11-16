@@ -1,0 +1,179 @@
+name: Build, Containerize & Deploy PulseVault
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  pages: write
+  id-token: write
+  deployments: write
+
+concurrency:
+  group: "pulsevault-deploy-${{ github.ref }}"
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  ci-and-docker:
+    name: Lint, Build & Publish Docker Image
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+
+      - name: TypeScript check & Vite + Server build
+        run: |
+          npm run lint
+          npm run build
+          npm run build:server
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata (tags & labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}
+          tags: |
+            type=sha,prefix=sha-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build Docker image & load locally for smoke test
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: pulsevault:ci-test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run container health check
+        run: |
+          docker run -d --name pulsevault-smoke -p 3000:3000 pulsevault:ci-test
+          for i in $(seq 1 15); do
+            if curl -fsS http://127.0.0.1:3000/api/health; then
+              echo ""
+              echo "Container health check passed."
+              docker rm -f pulsevault-smoke
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs pulsevault-smoke || true
+          docker rm -f pulsevault-smoke || true
+          exit 1
+
+      - name: Build and push Docker image to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-github-pages:
+    name: Deploy Static Preview to GitHub Pages
+    needs: ci-and-docker
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+
+      - name: Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Build frontend with Pages base path
+        env:
+          VITE_BASE_PATH: "${{ steps.pages.outputs.base_path }}/"
+        run: npm run build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  deploy-cloud-run:
+    name: Deploy Full-Stack Container to Google Cloud Run (Optional)
+    needs: ci-and-docker
+    if: ${{ github.event_name != 'pull_request' && vars.GCP_PROJECT_ID != '' && vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GCP_SERVICE_ACCOUNT != '' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ steps.cloudrun.outputs.url }}
+
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      - name: Deploy container to Cloud Run
+        id: cloudrun
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: pulsevault
+          region: ${{ vars.GCP_REGION || 'asia-northeast1' }}
+          image: ghcr.io/${{ github.repository }}:sha-${{ github.sha }}
+          env_vars: |
+            NODE_ENV=production
+          secrets: |
+            GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}

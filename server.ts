@@ -16,16 +16,18 @@ import type {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
+function getAiClient(): GoogleGenAI {
+  return new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY,
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build',
+      },
     },
-  },
-});
+  });
+}
 
 const SYSTEM_INSTRUCTION = `You are the Autonomous Bandwidth Allocation & Personal Media Sync Engine running on a user's mobile device. Your objective is to prevent daily cellular data wastage by calculating net surplus bandwidth prior to the carrier's midnight reset and generating an optimized, deterministic sync manifest strictly from authorized open RSS/Atom podcast feeds and user-owned Google Drive folders.
 
@@ -669,6 +671,7 @@ async function startServer() {
         2
       );
 
+      const ai = getAiClient();
       const response = await ai.models.generateContent({
         model: 'gemini-4-hydrogen',
         contents: `Analyze the user's favorite languages, genres, likes, dislikes, priority_weight of connected RSS podcasts and Google Drive folders, device telemetry, and candidate pool. Curate and rank the optimal download manifest:\n\n${evaluationPrompt}`,
@@ -789,7 +792,7 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.resolve(__dirname, 'dist');
+    const distPath = path.resolve(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*', (_req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
