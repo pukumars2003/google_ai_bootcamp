@@ -1,0 +1,234 @@
+---
+name: Precision Telemetry
+colors:
+  surface: '#faf8ff'
+  surface-dim: '#d2d9f4'
+  surface-bright: '#faf8ff'
+  surface-container-lowest: '#ffffff'
+  surface-container-low: '#f2f3ff'
+  surface-container: '#eaedff'
+  surface-container-high: '#e2e7ff'
+  surface-container-highest: '#dae2fd'
+  on-surface: '#131b2e'
+  on-surface-variant: '#3f4850'
+  inverse-surface: '#283044'
+  inverse-on-surface: '#eef0ff'
+  outline: '#707881'
+  outline-variant: '#bfc7d2'
+  surface-tint: '#006398'
+  primary: '#006194'
+  on-primary: '#ffffff'
+  primary-container: '#007bb9'
+  on-primary-container: '#fdfcff'
+  inverse-primary: '#93ccff'
+  secondary: '#006c49'
+  on-secondary: '#ffffff'
+  secondary-container: '#6cf8bb'
+  on-secondary-container: '#00714d'
+  tertiary: '#4648d4'
+  on-tertiary: '#ffffff'
+  tertiary-container: '#6063ee'
+  on-tertiary-container: '#fffbff'
+  error: '#ba1a1a'
+  on-error: '#ffffff'
+  error-container: '#ffdad6'
+  on-error-container: '#93000a'
+  primary-fixed: '#cce5ff'
+  primary-fixed-dim: '#93ccff'
+  on-primary-fixed: '#001d31'
+  on-primary-fixed-variant: '#004b73'
+  secondary-fixed: '#6ffbbe'
+  secondary-fixed-dim: '#4edea3'
+  on-secondary-fixed: '#002113'
+  on-secondary-fixed-variant: '#005236'
+  tertiary-fixed: '#e1e0ff'
+  tertiary-fixed-dim: '#c0c1ff'
+  on-tertiary-fixed: '#07006c'
+  on-tertiary-fixed-variant: '#2f2ebe'
+  background: '#faf8ff'
+  on-background: '#131b2e'
+  surface-variant: '#dae2fd'
+typography:
+  display-hero:
+    fontFamily: Hanken Grotesk
+    fontSize: 48px
+    fontWeight: '600'
+    lineHeight: 56px
+    letterSpacing: -0.03em
+  headline-lg:
+    fontFamily: Hanken Grotesk
+    fontSize: 32px
+    fontWeight: '600'
+    lineHeight: 40px
+    letterSpacing: -0.025em
+  headline-lg-mobile:
+    fontFamily: Hanken Grotesk
+    fontSize: 24px
+    fontWeight: '600'
+    lineHeight: 32px
+    letterSpacing: -0.02em
+  headline-md:
+    fontFamily: Hanken Grotesk
+    fontSize: 24px
+    fontWeight: '600'
+    lineHeight: 32px
+    letterSpacing: -0.02em
+  headline-sm:
+    fontFamily: Hanken Grotesk
+    fontSize: 18px
+    fontWeight: '600'
+    lineHeight: 26px
+    letterSpacing: -0.015em
+  title-metric:
+    fontFamily: Hanken Grotesk
+    fontSize: 28px
+    fontWeight: '700'
+    lineHeight: 34px
+    letterSpacing: -0.02em
+  body-lg:
+    fontFamily: Inter
+    fontSize: 16px
+    fontWeight: '400'
+    lineHeight: 24px
+    letterSpacing: -0.01em
+  body-md:
+    fontFamily: Inter
+    fontSize: 14px
+    fontWeight: '400'
+    lineHeight: 20px
+    letterSpacing: -0.005em
+  body-sm:
+    fontFamily: Inter
+    fontSize: 12px
+    fontWeight: '400'
+    lineHeight: 18px
+    letterSpacing: 0em
+  mono-metric:
+    fontFamily: JetBrains Mono
+    fontSize: 13px
+    fontWeight: '500'
+    lineHeight: 18px
+    letterSpacing: -0.02em
+  mono-label:
+    fontFamily: JetBrains Mono
+    fontSize: 11px
+    fontWeight: '600'
+    lineHeight: 16px
+    letterSpacing: 0.04em
+rounded:
+  sm: 0.25rem
+  DEFAULT: 0.5rem
+  md: 0.75rem
+  lg: 1rem
+  xl: 1.5rem
+  full: 9999px
+spacing:
+  gutter: 1.5rem
+  gutter-mobile: 1rem
+  margin: 2rem
+  margin-mobile: 1rem
+  space-xs: 0.25rem
+  space-sm: 0.5rem
+  space-md: 1rem
+  space-lg: 1.5rem
+  space-xl: 2.5rem
+---
+
+## Brand & Style
+
+This design system delivers an ultra-clean, high-precision telemetry and financial intelligence interface. The aesthetic bridges the analytical rigor of observability platforms with the high-trust refinement of institutional fintech.
+
+### Core Character
+- **Analytical Clarity:** Information density is balanced with generous negative space to minimize cognitive load during real-time data inspection.
+- **Engineered Restraint:** Avoids unnecessary ornamentation. Depth, focus, and hierarchy are communicated through subtle structural outlines, crisp typography, and disciplined pops of signal color.
+- **Executive Precision:** Evokes surgical control, trust, and absolute real-time accuracy.
+
+### Design Movement
+**Refined Technical Minimalism:** Pure whites, crisp slate neutrals, architectural micro-borders, and diffused atmospheric elevation, illuminated by vivid marine and emerald indicators.
+
+## Colors
+
+The palette is engineered for clinical legibility and instant metric parsing on pure and off-white ground planes.
+
+### Surface Hierarchy
+- **Canvas Base:** `#FFFFFF` (Pure pristine background for core panels and data tables).
+- **Sub-Surface / Canvas Backdrop:** `#F8FAFC` (Slate 50, provides soft contrast against elevated cards).
+- **Surface Accent / Hover:** `#F1F5F9` (Slate 100, applied to hover states and table striping).
+
+### Border Tokens
+- **Structural Border:** `#E2E8F0` (Slate 200, crisp 1px hairline divider for modular containment).
+- **Muted Divider:** `#F1F5F9` (Internal horizontal rules within dense data lists).
+
+### Typography Scale
+- **Primary Text:** `#0F172A` (Slate 900, commanding contrast for headings, key figures, and critical values).
+- **Secondary Text:** `#475569` (Slate 600, balanced mid-tone for table columns, descriptions, and metadata).
+- **Tertiary / Helper Text:** `#94A3B8` (Slate 400, timestamps, static labels, and input placeholders).
+
+### Signal Accents
+- **Primary Telemetry (Cyan / Azure Blue):** `#0284C7` (Interactive highlights, primary active states, data streams, and positive velocity trends).
+- **Secondary Metric (Emerald):** `#10B981` (System health, confirmed ledger settlements, active endpoints, and upward liquidity).
+- **Alert / Degraded Metric:** `#EF4444` (Critical failure, latency spikes, and margin liquidation warnings).
+
+## Typography
+
+Typography pairs geometric clarity with mathematical tabular precision.
+
+- **Headlines (Hanken Grotesk):** Modern, sharp, and confident. Tighter letter spacing on larger scales delivers an institutional executive tone.
+- **Body & Controls (Inter):** Highly legible at all sizes with neutral horizontal rhythm; supports dense scanning across telemetry matrices.
+- **Data & Telemetry Markers (JetBrains Mono):** Reserved for quantitative readouts, transaction hashes, latency calculations, currency volumes, and uppercase telemetry badges (`mono-label`).
+
+## Layout & Spacing
+
+The layout philosophy uses a disciplined 12-column fluid responsive grid anchored by generous outer breathing room.
+
+### Rhythm & Alignment
+- **Canvas Margins:** Desktop applications use `2rem` outer padding, compressing to `1rem` on viewports `< 768px`.
+- **Card Internals:** Dashboard widgets and data containers maintain a minimum internal padding of `space-lg` (`1.5rem`), preventing dense analytical charts from crowding boundaries.
+- **Vertical Metric Rhythm:** KPI groupings stack with `space-xs` between label and value, and `space-sm` between value and trajectory badge.
+- **Reflow Rules:** 12-column layouts collapse to 6 columns on tablet (`< 1024px`), and a single vertical stream (1 column) on mobile (`< 640px`).
+
+## Elevation & Depth
+
+Visual hierarchy uses a hybrid strategy of tonal separation, hairline architectural borders, and soft, highly diffused ambient drops.
+
+### Elevation Tiers
+1. **Level 0 (App Shell / Canvas):** Surface color `#F8FAFC`. Zero elevation.
+2. **Level 1 (Telemetry Panels & Data Cards):** Surface color `#FFFFFF`, 1px continuous outline in `#E2E8F0`, and an ultra-soft ambient shadow:
+   `box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.03), 0 6px 16px -4px rgba(15, 23, 42, 0.04);`
+3. **Level 2 (Hover States & Selected Modules):** Subtle upward translation (-1px) paired with expanded diffusion:
+   `box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 12px 24px -6px rgba(15, 23, 42, 0.06);`
+4. **Level 3 (Overlays, Flyouts & Modals):** Clean `#FFFFFF` fill with high-reach shadow:
+   `box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);`
+
+## Shapes
+
+The interface balances precision with approachable geometry using consistent curved containment.
+
+- **Base Corner Radius (0.5rem / 8px):** Buttons, standard inputs, small badges, and tooltips.
+- **Container Corner Radius (`rounded-lg`, 1rem / 16px):** Metric panels, interactive graphs, data tables, and modal dialogues.
+- **Pill Radius (Full / 9999px):** Status badges, live pulse monitors, and operational toggles.
+
+## Components
+
+### Buttons
+- **Primary:** Solid `#0284C7` fill with white `#FFFFFF` text. Micro subtle shadow (`0 1px 2px rgba(2, 132, 199, 0.2)`). Hover transitions to `#0369A1`. Height: 40px, padding: 0 16px, font: Inter 14px weight 600.
+- **Secondary:** `#FFFFFF` background, 1px border `#E2E8F0`, `#0F172A` text. Hover brings surface `#F8FAFC` and border `#CBD5E1`.
+- **Ghost / Utility:** Transparent background, `#475569` text. Hover creates `#F1F5F9` tint.
+
+### Telemetry Badges & Chips
+- **Live / Active Signal:** Pill-shaped (`rounded-full`), `#ECFDF5` emerald tint background, `#065F46` text, with an inline 6px `#10B981` glowing dot. Uses `mono-label` typography.
+- **Informational / Stream:** Pill-shaped, `#F0F9FF` sky tint background, `#0369A1` text.
+
+### Data Tables & Lists
+- **Header:** `#F8FAFC` background with uppercase `mono-label` text in `#64748B`. 40px row height, bottom border 1px `#E2E8F0`.
+- **Rows:** `#FFFFFF` ground, 52px height, 1px bottom border in `#F1F5F9`. Hover state shifts seamlessly to `#F8FAFC`. Values use tabular numbers (`font-variant-numeric: tabular-nums`).
+
+### Input Fields
+- **Container:** Pure `#FFFFFF` background with 1px border in `#E2E8F0` and `roundedness: 2` (8px). Height: 40px, padding: 0 12px.
+- **Focus State:** Hairline transition to `#0284C7` with a 3px diffused outer halo: `box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12)`.
+
+### Checkboxes & Radios
+- Box size 18px x 18px. Default border `#CBD5E1` with `#FFFFFF` fill. Selected state transforms to solid `#0284C7` with a white geometric checkmark. Focus applies a `2px` ring in `rgba(2, 132, 199, 0.2)`.
+
+### Telemetry Stat Cards
+- Enclosed in a 1px `#E2E8F0` border on `#FFFFFF` ground. Padding `space-lg`. Houses an uppercase tracking label (`mono-label`), prominent value readout (`title-metric`), and horizontal sparkline or delta chip showing rate-of-change indicators.

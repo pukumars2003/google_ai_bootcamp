@@ -1,0 +1,8 @@
+{
+  "name": "PulseVault",
+  "description": "Automated Bandwidth & Personal Media Sync Utility built on open RSS/Atom podcast protocols and user-owned Google Drive storage.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
